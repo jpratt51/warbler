@@ -8,14 +8,14 @@
       <form method="POST" id="user_form">
         {{ form.hidden_tag() }}
 
-        {% for field in form if field.widget.input_type != 'hidden' and field.name != 'password' %}
+        {% for field in form if field.widget.input_type != 'hidden' and field.name != 'password' and field.name != 'username'%}
           {% for error in field.errors %}
             <span class="text-danger">{{ error }}</span>
           {% endfor %}
           {{ field(placeholder=field.label.text, class="form-control") }}
         {% endfor %}
 
-        <p>To confirm changes, enter your password:</p>
+        <p>To confirm changes, enter your current username password:</p>
         {% if form.password.errors %}
           {% for error in form.password.errors %}
             <span class="text-danger">
@@ -23,7 +23,8 @@
           </span>
           {% endfor %}
         {% endif %}
-        {{ form.password(placeholder="Enter your password to confirm", class="form-control") }}
+        {{ form.username(placeholder="Enter your username and password to confirm", class="form-control")}}
+        {{ form.password(class="form-control") }}
 
         <div class="edit-btn-area">
           <button class="btn btn-success">Edit this user!</button>
