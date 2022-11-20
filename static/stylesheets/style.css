@@ -512,7 +512,14 @@ p.card-bio {
   min-width: 105px;
 }
 
-#messages-form {
+#star {
+  position: absolute;
+  top: 4px;
+  left: 550px;
+  z-index: 1;
+}
+
+#like-button {
   position: absolute;
   top: 4px;
   right: 4px;

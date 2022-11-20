@@ -182,6 +182,22 @@ def users_followers(user_id):
     user = User.query.get_or_404(user_id)
     return render_template('users/followers.html', user=user)
 
+@app.route('/users/<int:user_id>/likes')
+def show_likes(user_id):
+    """Show list of liked warbles for this user."""
+
+    if not g.user:
+        flash("Access unauthorized.", "danger")
+        return redirect("/")
+
+    user = User.query.get_or_404(user_id)
+
+    messages = (Message
+            .query
+            .order_by(Message.timestamp.desc())
+            .all())
+
+    return render_template('users/likes.html', messages=messages, user=user)
 
 @app.route('/users/follow/<int:follow_id>', methods=['POST'])
 def add_follow(follow_id):
@@ -268,6 +284,34 @@ def delete_user():
     db.session.commit()
 
     return redirect("/signup")
+
+@app.route('/users/add_like/<int:message_id>', methods=['POST'])
+def add_like(message_id):
+    """Add a like to a warble for the currently-logged-in user."""
+
+    if not g.user:
+        flash("Access unauthorized.", "danger")
+        return redirect("/")
+
+    message = Message.query.get_or_404(message_id)
+    g.user.likes.append(message)
+    db.session.commit()
+
+    return redirect(f"/")
+
+@app.route('/users/remove_like/<int:message_id>', methods=['POST'])
+def remove_like(message_id):
+    """Remove a like for a warble for the currently-logged-in user."""
+
+    if not g.user:
+        flash("Access unauthorized.", "danger")
+        return redirect("/")
+
+    message = Message.query.get(message_id)
+    g.user.likes.remove(message)
+    db.session.commit()
+
+    return redirect(f"/")
 
 
 ##############################################################################
